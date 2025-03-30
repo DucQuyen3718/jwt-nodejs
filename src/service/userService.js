@@ -25,7 +25,7 @@ const createNewUser = async (email, password, username) => {
 
     try {
         const [rows, fields] = await connection.execute(
-            'INSERT INTO users (email, password, username) VALUES (?, ?, ?)',
+            'INSERT INTO user (email, password, username) VALUES (?, ?, ?)',
             [email, hashPass, username]
         );
 
@@ -37,7 +37,7 @@ const createNewUser = async (email, password, username) => {
 }
 
 const getUserList = async () => {
-    let users = [];
+    let user = [];
 
     //create connection specify bluebird as Pormise
     const connection = await mysql.createConnection({
@@ -49,7 +49,7 @@ const getUserList = async () => {
 
     try {
         const [rows, fields] = await connection.execute(
-            'SELECT * from users',
+            'SELECT * from user',
         );
 
         return rows;
@@ -60,7 +60,7 @@ const getUserList = async () => {
 }
 
 const deleteUser = async (id) => {
-    // DELETE FROM users WHERE id = ""
+    // DELETE FROM user WHERE id = ""
     const connection = await mysql.createConnection({
         host: 'localhost',
         user: 'root',
@@ -70,7 +70,7 @@ const deleteUser = async (id) => {
 
     try {
         const [rows, fields] = await connection.execute(
-            'DELETE FROM users WHERE id = ?',
+            'DELETE FROM user WHERE id = ?',
             [id]
         );
 
@@ -91,7 +91,7 @@ const getUserById = async (id) => {
 
     try {
         const [rows, fields] = await connection.execute(
-            'SELECT * FROM users WHERE id = ?',
+            'SELECT * FROM user WHERE id = ?',
             [id]
         );
         return rows;
@@ -110,7 +110,7 @@ const updateUserInfo = async (email, username, id) => {
 
     try {
         const [rows, fields] = await connection.execute(
-            'UPDATE users SET email = ?, username = ? WHERE id = ?',
+            'UPDATE user SET email = ?, username = ? WHERE id = ?',
             [email, username, id]
         );
         return rows;
