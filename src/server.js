@@ -4,10 +4,15 @@ import initWebRoutes from "./routes/web";
 require('dotenv').config();
 import bodyParser from "body-parser";
 // import connection from "./config/connectDB";
-
+import initApiRoutes from "./routes/api"
+import configCors from "./config/cors";
 
 const app = express();
 const PORT = process.env.PORT || 8080;
+
+
+//config CORS
+configCors(app)
 
 //config view engine
 configViewEngine(app);
@@ -21,7 +26,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 //init web route
 initWebRoutes(app);
-
+initApiRoutes(app);
 app.listen(PORT, () => {
     console.log(`>>> JWT Backend is running on port ${PORT}`)
 })
