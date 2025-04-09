@@ -1,6 +1,7 @@
 import db from '../models/index'
 import bcrypt from "bcryptjs";
-
+// import { Op } from '@sequelize/core';
+import { Op } from 'sequelize';
 
 const salt = bcrypt.genSaltSync(10);
 
@@ -8,7 +9,6 @@ const hashUserPassword = (userPassword) => {
     let hashPassword = bcrypt.hashSync(userPassword, salt);
     return hashPassword
 }
-
 
 const checkEmailExist = async (userEmail) => {
     let user = await db.User.findOne({
@@ -31,8 +31,6 @@ const checkPhoneExist = async (userPhone) => {
     }
     return false;
 }
-
-
 
 const registerNewUser = async (rawUserData) => {
 
@@ -81,6 +79,62 @@ const registerNewUser = async (rawUserData) => {
 
 }
 
+const checkPassword = (inputPassword, hashPassword) => {
+    return bcrypt.compareSync(inputPassword, hashPassword); //true of false
+}
+
+const handleUserLogin = async (rawData) => {
+    try {
+
+        let user = await db.User.findOne({
+            where: {
+                [Op.or]: [
+                    { email: rawData.valueLogin },
+                    { phone: rawData.valueLogin }
+                ]
+            }
+        })
+
+        if (user) {
+            console.log(">>> found user with email/phone")
+            let isCorrectPassword = checkPassword(rawData.password, user.password);
+            if (isCorrectPassword === true) {
+                return {
+                    EM: "OK!",
+                    EC: 0,
+                    DT: ''
+                };
+            }
+        }
+
+        console.log(">>> Input user with email/phone", rawData.valueLogin, "password: ", rawData.password)
+        return {
+            EM: "Your email/phone number or password is incorrect",
+            EC: 1,
+            DT: ''
+        }
+
+
+
+
+        // if (isPhoneExist === false) {
+        //     
+        // }
+
+
+
+    } catch (error) {
+        console.log(error)
+        return {
+            EM: "Some thing wrong in service",
+            EC: "-2"
+        }
+    }
+}
+
+
+
 module.exports = {
-    registerNewUser
+    registerNewUser,
+    handleUserLogin
 }
