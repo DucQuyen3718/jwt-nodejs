@@ -6,8 +6,6 @@ import db from '../models/index';
 const salt = bcrypt.genSaltSync(10);
 
 
-
-
 const hashUserPassword = (userPassword) => {
     let hashPassword = bcrypt.hashSync(userPassword, salt);
     return hashPassword
