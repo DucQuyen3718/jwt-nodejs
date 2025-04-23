@@ -8,7 +8,16 @@ import groupController from "../controller/groupController"
  * 
  * @param {*} app: express app
  */
+
+const testMiddleWare = (req, res, next) => {
+    console.log(">>> calling a middleware")
+    if (true) {
+        return res.send("reject middleware")
+    }
+    next();
+}
 const initApiRoutes = (app) => {
+
 
     //rest api
     //GET - R; POST - C, PUT - U, DELETE - D

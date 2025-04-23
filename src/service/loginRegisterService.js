@@ -1,7 +1,11 @@
+require("dotenv").config()
 import db from '../models/index'
 import bcrypt from "bcryptjs";
 // import { Op } from '@sequelize/core';
 import { Op } from 'sequelize';
+import { getGroupWithRoles } from './JWTService';
+import { createJWT } from '../middleware/JWTAction'
+
 
 const salt = bcrypt.genSaltSync(10);
 
@@ -59,7 +63,8 @@ const registerNewUser = async (rawUserData) => {
             email: rawUserData.email,
             phone: rawUserData.phone,
             username: rawUserData.username,
-            password: hashPassword
+            password: hashPassword,
+            groupId: 4
         })
 
         return {
@@ -85,7 +90,6 @@ const checkPassword = (inputPassword, hashPassword) => {
 
 const handleUserLogin = async (rawData) => {
     try {
-
         let user = await db.User.findOne({
             where: {
                 [Op.or]: [
@@ -96,22 +100,36 @@ const handleUserLogin = async (rawData) => {
         })
 
         if (user) {
-            console.log(">>> found user with email/phone")
             let isCorrectPassword = checkPassword(rawData.password, user.password);
             if (isCorrectPassword === true) {
+
+                // let token
+
+                //test roles:
+                let groupWithRoles = await getGroupWithRoles(user);
+                let payload = {
+                    email: user.email,
+                    groupWithRoles,
+                    expiresIn: process.env.JWT_EXPIRES_IN //60 milisec
+                }
+                let token = createJWT(payload)
                 return {
                     EM: "OK!",
                     EC: 0,
-                    DT: ''
+                    DT: {
+                        access_token: token,
+                        groupWithRoles
+                    }
                 };
             }
         }
 
-        console.log(">>> Input user with email/phone", rawData.valueLogin, "password: ", rawData.password)
         return {
             EM: "Your email/phone number or password is incorrect",
             EC: 1,
-            DT: ''
+            DT: {
+                access_token: ''
+            }
         }
 
 
