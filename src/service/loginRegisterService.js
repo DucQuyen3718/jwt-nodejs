@@ -118,7 +118,9 @@ const handleUserLogin = async (rawData) => {
                     EC: 0,
                     DT: {
                         access_token: token,
-                        groupWithRoles
+                        groupWithRoles,
+                        email: user.email,
+                        username: user.username
                     }
                 };
             }
@@ -131,9 +133,6 @@ const handleUserLogin = async (rawData) => {
                 access_token: ''
             }
         }
-
-
-
 
         // if (isPhoneExist === false) {
         //     
