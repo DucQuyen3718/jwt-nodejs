@@ -66,13 +66,6 @@ const handleLogin = async (req, res) => {
             DT: '',         //Date
         })
     }
-
-
-
-
-
-
-
 }
 
 module.exports = {
