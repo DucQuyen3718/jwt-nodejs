@@ -1,0 +1,92 @@
+import userApiService from "../service/userApiService";
+import roleApiService from "../service/roleApiService"
+
+const readFunc = async (req, res) => {
+    try {
+        let data = await roleApiService.getAllRoles();
+
+        return res.status(200).json({
+            EM: data.EM,    //error message
+            EC: data.EC,         //error code
+            DT: data.DT,         //Data
+        })
+    } catch (e) {
+        console.log(e)
+        return res.status(500).json({
+            EM: 'error from server',    //error message
+            EC: '-1',         //error code
+            DT: '',         //Data
+        })
+    }
+
+}
+
+const createFunc = async (req, res) => {
+    try {
+        // validate lan nua
+        let data = await roleApiService.createNewRoles(req.body);
+        return res.status(200).json({
+            EM: data.EM,    //error message
+            EC: data.EC,         //error code
+            DT: data.DT,         //Data
+        })
+    } catch (e) {
+        console.log(e)
+        return res.status(500).json({
+            EM: 'error from server',    //error message
+            EC: '-1',         //error code
+            DT: '',         //Data
+        })
+    }
+}
+
+//todo
+const updateFunc = async (req, res) => {
+    try {
+        let data = await userApiService.updateUser(req.body);
+        return res.status(200).json({
+            EM: data.EM,    //error message
+            EC: data.EC,         //error code
+            DT: data.DT,         //Data
+        })
+
+    } catch (e) {
+        console.log(e)
+        return res.status(500).json({
+            EM: 'error from server',    //error message
+            EC: '-1',         //error code
+            DT: '',         //Data
+        })
+    }
+
+}
+
+const deleteFunc = async (req, res) => {
+    try {
+        let data = await roleApiService.deleteRole(req.body.id);
+        return res.status(200).json({
+            EM: data.EM,    //error message
+            EC: data.EC,         //error code
+            DT: data.DT,         //Data
+        })
+
+    } catch (e) {
+        console.log(e)
+        return res.status(500).json({
+            EM: 'error from server',    //error message
+            EC: '-1',         //error code
+            DT: '',         //Data
+
+        })
+    }
+
+}
+
+
+module.exports = {
+    readFunc,
+    createFunc,
+    updateFunc,
+    deleteFunc,
+
+}
